@@ -1,91 +1,50 @@
 # Agents Automation
 
-This is a 30-minute conference talk about making agent automation something you can show and defend. The through-line is work already published in the open: a Cursor skill that writes the next Ditectrev blog post by copying a named flavor and refusing a generic layout, a Cursor skill that generates the next Ditectrev book by copying a named template and obeying a few hard rules, and editor hooks that format and test after an agent edits. The audience should leave with a test they can apply to their own work: a good agent demo is a visible workflow with constraints, not a prompt that happens to work once.
+This is a 30-minute conference talk about how to automate repeated work with AI agents, and how to choose a tool you can actually demo. Cursor is one tool. The through-line is the artifact a stranger can open: a hook file in a repo, a saved trigger plus a prompt, or a vendor's public workflow. The audience should leave able to point at that artifact, and unwilling to treat a chat that happened to work once as a demo.
 
 ### Agents Automation
 
-- 30 minutes, three live demos
-- A skill the agent has to follow, rules it cannot improvise, a hook that checks the edit
+- 30 minutes. Two live demos, plus one optional demo to cut if time slips
+- How to automate repeated work, and how to choose a tool the room can see
 - Daniel Danielecki
-- Repos stay open: [github.com/danieldanielecki](https://github.com/danieldanielecki) and [github.com/Ditectrev](https://github.com/Ditectrev)
-- Rough split: about 13 minutes of talk, about 17 minutes of demo. If the book skill runs long, drop the hook demo
+- Talk home: [danieldanielecki/Agents-Automations](https://github.com/danieldanielecki/Agents-Automations). This outline is the README
+- Rough split: about 13 minutes of talk, about 14 minutes for the two live demos, about 3 minutes for the optional third
 
 ### What you should be able to do afterwards
 
-- Point at a repeated agent workflow that is already a file in the repo
-- Name the rules an agent is not allowed to improvise
-- Put a check around the agent, instead of hoping the last message is correct
-- Leave with repos a stranger can open after the talk
+- Sort a repeated job into a hook, a cloud agent, or a schedule or event
+- Point at the file or screen a stranger would open to see why it ran
+- Refuse a stage demo that only exists in one person's chat
+- Leave with this repo, plus the vendor pages on the last slide
 
 ### What usually breaks on stage
 
 - The prompt lives in one person's chat history
-- The "demo" is a generated file nobody can diff
-- A long agent run eats the rest of the slot
-- Failure looks like silence: no skill, no rule, no log
+- The demo waits on a cloud run that does not finish
+- The automation only exists in a private repo the room cannot open
+- Failure looks like a spinner: no file, no trigger, no log
 
-### A skill is the workflow
+### How to choose a tool you can demo
 
-- [Ditectrev/Blog](https://github.com/Ditectrev/Blog) is the open-source blog at [blog.ditectrev.com](https://blog.ditectrev.com)
-- The agent artifact is `.cursor/skills/ditectrev-blog/SKILL.md` (`name: ditectrev-blog`)
-- It tells the agent how to write the next post: which flavor to copy, where the MDX file goes, and what it must refuse
-- Stay in that file. The demo is the skill, not a tour of the site theme
+- A hook is a script the agent does not have to remember. The audience sees a file. No model call required
+- A cloud coding agent is a task in its own environment. The audience sees a branch, a diff, or a pull request. A live run is a bad use of the slot
+- A scheduled or event automation is a trigger plus a prompt you save once. The audience sees that saved setup. Do not wait for the next fire
+- If the only proof is a private screen, say so, and do not pretend the talk repo contains it
 
-### Demo 1 — The blog skill
+### The landscape
 
-- Talk vs demo: live demo, about 6 minutes (6:30–12:30)
-- Repo: [Ditectrev/Blog](https://github.com/Ditectrev/Blog)
-- File: `.cursor/skills/ditectrev-blog/SKILL.md` (`name: ditectrev-blog`, about 29KB)
-- What the audience sees:
-  - The skill description: Ditectrev Blog MDX posts, in this repo's nested `data/blog` layout, when creating or updating a post
-  - The source table: pick one flavor before writing. Comparison (`graphql-vs-rest`), long API comparison (JavaScript string methods), how-to (`.npmrc`), complete guide (CSS borders), migration (Jetifier / AndroidX)
-  - "Do not invent a generic Medium/Substack layout." Do not use this skill for the books/courses README layout
-  - Graphic rule: ask what to include before generating anything. Hero is a repo-hosted AVIF at 1400×788. Never generate the graphic first
-  - Medium agent rules: after the post is live, Import a story. Never call `api.medium.com`, never ask for `MEDIUM_INTEGRATION_TOKEN`, never add a Medium GitHub Action
-- What it proves: the publishing workflow is a file the agent has to follow. It is not inventing a blog post shape
-- How to run it:
-  - Scroll the source table, then the Medium agent rules. Those two scrolls are the slide
-  - If the agent is ready, ask it to start a how-to and stop when it picks the `.npmrc` flavor and refuses the Medium API
-  - Do not write a full post or generate a graphic on stage
-- Fallback (no network): stay on the source table and the three "never" Medium lines. That scroll is the demo even with no model call and no live site
+- [Cursor Cloud Agents](https://cursor.com/docs/cloud-agent) run in isolated VMs, clone the repo, and can open a pull request. Start one from the desktop Cloud dropdown, [cursor.com/agents](https://cursor.com/agents), Slack `@cursor`, or an `@cursor` comment on a GitHub pull request or issue, or a Bitbucket pull request. They were formerly called Background Agents. Cursor's docs say Free and Plus do not include them
+- [Cursor Automations](https://cursor.com/docs/cloud-agent/automations) run those cloud agents on a schedule or on events from GitHub, GitLab, Bitbucket Cloud, Slack, Linear, Sentry, PagerDuty, and webhooks. Create one in the Agents Window, at [cursor.com/automations](https://cursor.com/automations), with the `/automate` skill, or from a Marketplace template. An automation can attach no repository, one, or several. Slack and cron default to no repository unless you attach one
+- [Cursor Hooks](https://cursor.com/docs/hooks) are commands in `hooks.json`, at the project or user level. They can format after an edit, gate a shell call, or run when the agent stops. Cloud agents run `.cursor/hooks.json` from the repo once the environment is writable. Cursor's docs say it can also load Claude Code hooks
+- [Claude Code](https://code.claude.com/docs/en/hooks) has its own hooks. [Cloud scheduled tasks](https://code.claude.com/docs/en/routines), formerly routines, run on Anthropic's cloud on a schedule, an API call, or a GitHub event, from [claude.ai/code/routines](https://claude.ai/code/routines) or `/schedule`, on Pro, Max, Team, and Enterprise. The [GitHub Action](https://code.claude.com/docs/en/github-actions) `anthropics/claude-code-action` runs on `@claude` or on a workflow `prompt`, including a cron schedule
+- [GitHub Copilot cloud agent](https://docs.github.com/en/copilot/concepts/agents/coding-agent/about-coding-agent) researches a repo, plans, edits, and can open a pull request. You assign an issue, start it from the agents panel, or mention `@copilot` on a pull request. [Copilot automations](https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-automations) run that agent on an hourly, daily, or weekly schedule, or when an issue is created, a pull request is opened, or a pull request receives new commits. GitHub's docs say those automations are not available in public repositories
+- [Codex Cloud](https://learn.chatgpt.com/docs/cloud) runs a task in an isolated environment and lets you review the diff and open a pull request while the computer sleeps. The [Codex GitHub Action](https://learn.chatgpt.com/docs/github-action) is `openai/codex-action`. [ChatGPT scheduled tasks](https://learn.chatgpt.com/docs/automations) run on a schedule, or, on eligible web and mobile plans, from a Gmail, Slack, or GitHub event. Desktop tasks that need local files need the computer on and the app running
 
-### Rules the agent must not improvise
+### Demo 1 — A hook in a public repo
 
-- The blog skill says which workflow to copy
-- The book skill says which leftovers to refuse, including when an older book still has them
-- The next demo is [skills-books](https://github.com/Ditectrev/skills-books)
-- The skill says the book is `README.md` and slides live in `__presentation-slides/index.html`. This repo only contains the skill and a README. Do not go looking for a generated book on stage
-
-### Demo 2 — The book skill
-
-- Talk vs demo: live demo, about 7 minutes (14:30–21:30)
-- Repo: [Ditectrev/skills-books](https://github.com/Ditectrev/skills-books)
-- File: `.cursor/skills/ditectrev-books/SKILL.md` (`name: ditectrev-books`, about 45KB)
-- What the audience sees:
-  - The skill description: new Ditectrev book, study guide, course, or slides, copied from the SEO / HTML / A11Y / AZ-900 pattern
-  - Hard constraints, marked as review rules that override leftovers in older source repos:
-    - Link every named tool to its official URL
-    - No case-study sections
-    - Close every chapter with `Summary: {Exact Chapter Title}`, never a `Conclusion` heading
-    - CodeSandboxes only when the book has code snippets (HTML and A11Y yes; SEO and AZ-900 no)
-  - The flavor choice: tools-heavy (SEO), hands-on (HTML / A11Y), or study guide (AZ-900). Pick one before writing
-- What it proves: the agent is applying a house style. It is not inventing a textbook
-- How to run it:
-  - Scroll those four constraints. They are the slide
-  - If the agent is ready, ask it to start a tools-heavy book and stop when it chooses the SEO flavor and refuses CodeSandboxes
-  - Do not generate a full book on stage. The skill file is about 45KB and a full repo will blow the clock
-- Fallback (no network): stay in the hard-constraints section. That scroll is the demo even with no model call
-
-### Put a check around the agent
-
-- A skill constrains what the agent writes
-- A hook constrains what happens after it writes
-- [The Open Stock](https://github.com/Ditectrev/Open-Source-Stock-Application) already has both, next to an app you can open at [theopenstock.com](https://theopenstock.com)
-
-### Demo 3 — Hooks after the agent edits
-
-- Talk vs demo: live demo, about 4 minutes (23:00–27:00). Cut this one first if Demo 2 runs long
+- Talk vs demo: live demo, about 7 minutes (8:30–15:30)
 - Repo: [Ditectrev/Open-Source-Stock-Application](https://github.com/Ditectrev/Open-Source-Stock-Application)
+- This is not a product tour. The stock app is only a public repo that already has the hook. Stay in `.cursor/`
 - What the audience sees:
   - `.cursor/hooks.json`
   - `afterFileEdit` and `afterTabFileEdit` call `.cursor/hooks/after-file-edit.sh` (timeout 180s): Prettier on the edited file, then related Vitest tests
@@ -94,49 +53,85 @@ This is a 30-minute conference talk about making agent automation something you 
 - What it proves: format and tests run because the edit happened, not because the agent remembered
 - How to run it:
   - Show `hooks.json`, then the two script headers
-  - Do not run the full suite live. The stop hook allows 600 seconds
-- Fallback (no network): `hooks.json` on screen, with the two command names readable. No test run
+  - Do not run the suite. The stop hook allows 600 seconds
+  - Do not start an agent
+- Fallback (no network): the three files are already open. No model call and no test run
 
-### If the book skill runs long
+### A trigger you can open again
+
+- A hook watches the edit. An automation watches the clock or an event
+- The next demo is a Cursor screen, not a file in this talk repo
+- Say that plainly before you switch windows
+- The same shape exists elsewhere: Claude Code scheduled tasks, Copilot automations (private or internal repos only), and ChatGPT scheduled tasks. You will not click those today unless the optional demo fits
+
+### Demo 2 — Cursor Automations, no repo
+
+- Talk vs demo: live click-through, about 7 minutes (17:00–24:00)
+- There is no automation file in [Agents-Automations](https://github.com/danieldanielecki/Agents-Automations). The demo is the Automations UI at [cursor.com/automations](https://cursor.com/automations), or the same flow in the Agents Window
+- What the audience sees:
+  - Getting started, from the docs, matched on screen: choose a trigger, write a prompt, choose optional tools, choose no repository or one or more, then save and activate
+  - One scheduled trigger (a preset or a cron expression) and one GitHub trigger (pull request opened)
+  - The defaults worth saying out loud: Slack and cron start with no repository; a source-control trigger requires one; opening a pull request is a tool and is on by default for repo-backed automations
+  - The three Cursor-managed cards on that page: Bugbot, Security Agents, and PR Routing & Approval. Point at the names. Do not open a run
+- What it proves: the repeated job is a saved trigger plus a prompt, not a chat you have to remember
+- How to run it:
+  - Be logged in before you walk on. Land on an existing automation or the new-automation form
+  - Do not save a new automation, and do not wait for a cloud agent. Automations bill as cloud agent usage and will eat the slot
+- Fallback (no network): the Automations docs are already open on Getting started and Triggers. If [cursor.com/automations](https://cursor.com/automations) does not load, read those two lists. No cloud run
+
+### Demo 3 — A vendor workflow, optional
+
+- Talk vs demo: live scroll, about 3 minutes (24:00–27:00). Cut this first if Demo 1 or Demo 2 runs long
+- Repo: [anthropics/claude-code-action](https://github.com/anthropics/claude-code-action). Anthropic's public examples, not a repo you maintain
+- What the audience sees:
+  - [`examples/claude.yml`](https://github.com/anthropics/claude-code-action/blob/main/examples/claude.yml): the job runs only when an issue, comment, or review contains `@claude`, then uses `anthropics/claude-code-action@v1`
+  - [`examples/issue-triage.yml`](https://github.com/anthropics/claude-code-action/blob/main/examples/issue-triage.yml): on `issues: [opened]`, the prompt is `/label-issue`, and the job timeout is 10 minutes
+- What it proves: the same idea is a workflow file in a vendor repo. Cursor is not the only place it can live
+- How to run it:
+  - Scroll the `on:` block in `claude.yml`, then the `prompt` in `issue-triage.yml`
+  - Do not trigger Actions. The example needs an API key, and a run will not finish in the slot
+- Fallback (no network): both YAML files are already open locally. No Actions run
+
+### If time slips
 
 - Keep Demo 1 and Demo 2
-- Use the saved minutes on the hard constraints, then go to the close
-- One sentence: the stock app runs Prettier and related Vitest tests from hooks after the agent edits, and the stop hook records failures and still exits 0
-- Offer the repo URL verbally
+- Give the 24:00–27:00 block to the close
+- One sentence: Anthropic publishes the same pattern as `examples/claude.yml` in [claude-code-action](https://github.com/anthropics/claude-code-action)
+- Offer that URL verbally
 
 ### Where this talk lives
 
-- Talk home: [danieldanielecki/Agents-Automations](https://github.com/danieldanielecki/Agents-Automations). This outline is the README
-- Same habit as [JavaScript-Security-Engineering](https://github.com/danieldanielecki/JavaScript-Security-Engineering): the repo is what the audience clones
-- A later reveal.js pass can start from [__presentation-slides](https://github.com/Ditectrev/__presentation-slides)
+- Talk home: [danieldanielecki/Agents-Automations](https://github.com/danieldanielecki/Agents-Automations). The outline is the thing the audience clones
+- The hook demo is a different public repo. The Automations demo is a Cursor screen. The optional demo is Anthropic's repo
 - Slide URLs to leave up:
-  - [Blog](https://github.com/Ditectrev/Blog)
-  - [skills-books](https://github.com/Ditectrev/skills-books)
-  - [Open-Source-Stock-Application](https://github.com/Ditectrev/Open-Source-Stock-Application)
+  - [Cursor Automations](https://cursor.com/docs/cloud-agent/automations)
+  - [Cursor Hooks](https://cursor.com/docs/hooks)
+  - [Claude Code scheduled tasks](https://code.claude.com/docs/en/routines)
+  - [Copilot automations](https://docs.github.com/en/copilot/concepts/agents/cloud-agent/about-automations)
+  - [Codex scheduled tasks](https://learn.chatgpt.com/docs/automations)
 
 ### Close
 
-- A skill is the workflow the agent must repeat
-- Hard rules are what the agent must refuse
-- Hooks are the checks that run after the agent lets go
-- Question to leave them with: which repeated workflow of yours is already written down well enough that an agent should be forbidden from improvising?
+- A hook is a file that runs because the agent edited
+- An automation is a trigger plus a prompt you can open again
+- Choose the one a stranger can see without your chat history
+- Question to leave them with: when this job runs next week and you are not in the chat, where would a stranger look to see why it ran?
 
 ### Run of show
 
 - 0:00–2:00 talk — title, and what they should be able to do afterwards
 - 2:00–5:00 talk — what usually breaks on stage
-- 5:00–6:30 talk — a skill is the workflow
-- 6:30–12:30 demo — blog skill (`Blog`)
-- 12:30–14:30 talk — rules the agent must not improvise
-- 14:30–21:30 demo — book skill (`skills-books`)
-- 21:30–23:00 talk — a check after the agent lets go
-- 23:00–27:00 demo — editor hooks (`Open-Source-Stock-Application`), or give this block back to the close
+- 5:00–8:30 talk — how to choose, and the landscape
+- 8:30–15:30 demo — hook file (`Open-Source-Stock-Application`)
+- 15:30–17:00 talk — a trigger you can open again
+- 17:00–24:00 demo — Cursor Automations, click-through, no repo
+- 24:00–27:00 demo — Claude Code workflow files, or give this block to the close
 - 27:00–30:00 talk — where the talk repo lives, close, and the question
 
 ### Prep
 
-- Clone the three demo repos. Open both `SKILL.md` files and `hooks.json` in tabs before the talk
-- Pre-scroll Demo 1 to the source table. Pre-scroll Demo 2 to the hard-constraints list
-- The blog repo is a maintained fork of a Next.js theme. Stay in `.cursor/skills/ditectrev-blog/SKILL.md`. Do not tour the theme
-- Network can fail. None of the three beats need a live model call, a generated graphic, or a test run
-- Skip the stock app's full format, lint, and test suite
+- Open `.cursor/hooks.json` and the two hook scripts in tabs. Do not open the stock app itself
+- Be logged in to Cursor. Open [cursor.com/automations](https://cursor.com/automations) and the Automations docs on Getting started before you walk on
+- Open `examples/claude.yml` and `examples/issue-triage.yml` from a local clone of [anthropics/claude-code-action](https://github.com/anthropics/claude-code-action)
+- Network can fail. None of the three beats need a live model call, a cloud run, or a test run
+- Do not save a new Cursor automation. Do not run the stock app's format, lint, and test suite. Do not start a GitHub Actions run
