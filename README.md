@@ -1,4 +1,4 @@
-# Agents Automation
+# Agents Automations
 
 This is a 30-minute conference talk about how to automate repeated work with AI agents, and how to choose a tool you can actually demo. Cursor is one tool. The through-line is the artifact a stranger can open: a hook file in a repo, a saved trigger plus a prompt, or a vendor's public workflow. The audience should leave able to point at that artifact, and unwilling to treat a chat that happened to work once as a demo.
 
